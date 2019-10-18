@@ -1,6 +1,11 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Route, withRouter, Redirect } from "react-router-dom";
-import BubblePage from './components/BubblePage';
+import {
+  BrowserRouter as Router,
+  Route,
+  withRouter,
+  Redirect
+} from "react-router-dom";
+import BubblePage from "./components/BubblePage";
 import Login from "./components/Login";
 import "./styles.scss";
 
@@ -14,7 +19,8 @@ function App() {
           display BubblePage when you're authenticated 
         */}
 
-        <Route path= "/bubblePage"
+        <Route
+          path="/bubblePage"
           render={props => withAuthCheck(BubblePage, props)}
         />
       </div>
@@ -22,13 +28,11 @@ function App() {
   );
 }
 
-
 function withAuthCheck(Component, props) {
-  if (localStorage.getItem('token')) {
-    return <Component {...props} />
+  if (localStorage.getItem("token")) {
+    return <Component {...props} />;
   }
-  return <Redirect to='/' />;
- }
-
+  return <Redirect to="/" />;
+}
 
 export default App;

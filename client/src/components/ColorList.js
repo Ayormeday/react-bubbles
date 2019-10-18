@@ -38,7 +38,7 @@ const ColorList = ({ colors, updateColors }) => {
       })
       .catch(err => console.log(err.response));
   };
-  
+
   const deleteColor = color => {
     // make a delete request to delete this color
     updateColors(colors.filter(item => item.id !== color.id));
