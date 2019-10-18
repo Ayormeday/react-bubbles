@@ -22,21 +22,36 @@ const ColorList = ({ colors, updateColors }) => {
     // Make a put request to save your updated color
     // think about where will you get the id from...
     // where is is saved right now?
-    updateColors(
-      colors.map(color => {
-        if (color.id === colorToEdit.id) {
-          return colorToEdit;
-        } else {
-          return color;
-        }
-      })
-    );
+    if (colorToEdit.id > 0) {
+      
     axiosWithAuth()
-      .put(`${colorsURL}${colorToEdit.id}`, colorToEdit)
+    .put(`${colorsURL}/${colorToEdit.id}`, colorToEdit)
+    .then(res => {
+      console.log("Edited color on Server", res);
+      updateColors(
+        colors.map(color => {
+          if (color.id === colorToEdit.id) {
+            return colorToEdit;
+          } else {
+            return color;
+          }
+        })
+      );
+      setColorToEdit(initialColor);
+      setEditing(false);
+    })
+    .catch(err => console.log(err.response));
+    } else {
+      axiosWithAuth()
+      .post(`${colorsURL}`, colorToEdit)
       .then(res => {
-        console.log("Edited color on Server", res);
+        updateColors(res.data);
+        setColorToEdit(initialColor);
+        setEditing(false);
       })
       .catch(err => console.log(err.response));
+    }
+    
   };
 
   const deleteColor = color => {
@@ -49,6 +64,12 @@ const ColorList = ({ colors, updateColors }) => {
       })
       .catch(err => console.log("error in deleting: ", err.response));
   };
+
+  const newColor = () => {
+    setEditing(true);
+		setColorToEdit(initialColor);
+  }
+
   return (
     <div className="colors-wrap">
       <p>colors</p>
@@ -68,9 +89,13 @@ const ColorList = ({ colors, updateColors }) => {
           </li>
         ))}
       </ul>
+      
+      <div className="button-row">
+        <button onClick={newColor}>Add Color</button>
+      </div>
       {editing && (
         <form onSubmit={saveEdit}>
-          <legend>edit color</legend>
+          <legend>{colorToEdit.id > 0 ? 'edit' : 'new'} color</legend>
           <label>
             color name:
             <input
