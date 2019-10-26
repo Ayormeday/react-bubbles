@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
+import axiosWithAuth from "../helpers/axiosWithAuth";
 
 const initialColor = {
   color: "",
   code: { hex: "" }
 };
+const colorsURL = "http://localhost:5000/api/colors";
 
 const ColorList = ({ colors, updateColors }) => {
   console.log(colors);
@@ -15,17 +17,58 @@ const ColorList = ({ colors, updateColors }) => {
     setEditing(true);
     setColorToEdit(color);
   };
-
   const saveEdit = e => {
     e.preventDefault();
     // Make a put request to save your updated color
     // think about where will you get the id from...
     // where is is saved right now?
+    if (colorToEdit.id > 0) {
+      
+    axiosWithAuth()
+    .put(`${colorsURL}/${colorToEdit.id}`, colorToEdit)
+    .then(res => {
+      console.log("Edited color on Server", res);
+      updateColors(
+        colors.map(color => {
+          if (color.id === colorToEdit.id) {
+            return colorToEdit;
+          } else {
+            return color;
+          }
+        })
+      );
+      setColorToEdit(initialColor);
+      setEditing(false);
+    })
+    .catch(err => console.log(err.response));
+    } else {
+      axiosWithAuth()
+      .post(`${colorsURL}`, colorToEdit)
+      .then(res => {
+        updateColors(res.data);
+        setColorToEdit(initialColor);
+        setEditing(false);
+      })
+      .catch(err => console.log(err.response));
+    }
+    
   };
 
   const deleteColor = color => {
     // make a delete request to delete this color
+    updateColors(colors.filter(item => item.id !== color.id));
+    axiosWithAuth()
+      .delete(`${colorsURL}${color.id}`)
+      .then(res => {
+        console.log("Deleted a color on server", res);
+      })
+      .catch(err => console.log("error in deleting: ", err.response));
   };
+
+  const newColor = () => {
+    setEditing(true);
+		setColorToEdit(initialColor);
+  }
 
   return (
     <div className="colors-wrap">
@@ -46,9 +89,13 @@ const ColorList = ({ colors, updateColors }) => {
           </li>
         ))}
       </ul>
+      
+      <div className="button-row">
+        <button onClick={newColor}>Add Color</button>
+      </div>
       {editing && (
         <form onSubmit={saveEdit}>
-          <legend>edit color</legend>
+          <legend>{colorToEdit.id > 0 ? 'edit' : 'new'} color</legend>
           <label>
             color name:
             <input
@@ -81,5 +128,4 @@ const ColorList = ({ colors, updateColors }) => {
     </div>
   );
 };
-
 export default ColorList;

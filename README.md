@@ -29,9 +29,38 @@ In this project you will create a login page and request a token from the server
 Demonstrate your understanding of this Sprint's concepts by answering the following free-form questions. Edit this document to include your answers after each question. Make sure to leave a blank line above and below your answer so it is clear and easy to read by your project manager.
 
 - [ ] Explain what a token is used for.
+
+ A token is used to access protected pages or resources instead of the login credentials for a designated period of time. 
+ Token based authentication is one in which the user state is stored on the client. In the token based authentication, the user data is encrypted into a JWT (JSON Web Token) with a secret and then sent back to the client
+
 - [ ] What steps can you take in your web apps to keep your data secure?
+1. keep software up to date
+2. watch out for SQL injection
+3. encrypt log in page
+4. Protect against XSS attacks - cross-site scripting attacks
+5. keep error messages brief, beware of information given away in error messages.
+6. validate both sides - browser and server side.
+7. require strong passwords 
+8. avoid file uploads 
+9. use HTTPS protocol.
+10. Get website security tools.
+
 - [ ] Describe how web servers work.
+When browser requests a page from the web server and the web server responds by first obtaining the IP address the domain name reolves to (e.g www.google.com). It obtains in two ways, by searching in its cache or requesting one or more DNS(Domain Name System) servers.
+
+The browser requests the full URL from the web server having know the IP Address.
+
+The web server responds to the browser by sending the desired page, and if the requested page doesn't exist, or some other error occurs, it will send the appropriate error message.
+
+The browser gets webpage and displays it or the error message.
+
 - [ ] Which HTTP methods can be mapped to the CRUD acronym that we use when interfacing with APIs/Servers.
+
+POST METHOD
+GET METHOD
+PUT METHOD
+PATCH METHOD
+DELETE METHOD
 
 
 ## Project Set Up
